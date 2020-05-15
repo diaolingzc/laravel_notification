@@ -30,4 +30,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'iotBot' => [
+        'webApiBaseUrl' => env('IOT_BOT_WEB_API_BASE_URL'),
+        'robotQQ' => env('IOT_BOT_REBOT_QQ'),
+    ],
+
 ];

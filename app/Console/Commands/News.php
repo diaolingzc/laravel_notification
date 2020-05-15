@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use GuzzleHttp\Client;
+use App\Events\IotBot;
+
+class News extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'iot:news';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'iot news';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle(Client $client)
+    {
+        $response = json_decode($client->get('https://pacaio.match.qq.com/irs/rcd?cid=108&ext=&token=349ee24cdf9327a050ddad8c166bd3e3&page=1&expIds=')->getBody()->getContents(), true);
+
+        $message = '腾讯新闻：'. date('Y-m-d H:i:s') . PHP_EOL;
+        for ($i=0; $i < count($response['data']); $i++) { 
+          $message .= PHP_EOL . $response['data'][$i]['title'] . PHP_EOL . $response['data'][$i]['vurl'] ;
+        }
+        $this->info($message);
+        $data = [
+          'toUser' => 994971017,
+          'sendToType' => 2,
+          'sendMsgType' => 'TextMsg',
+          'content' => $message,
+          'groupid' => 0,
+          'atUser' => 0,
+        ];
+        event(new IotBot($data));
+    }
+}

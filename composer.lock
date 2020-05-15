@@ -4,8 +4,60 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ba13a425e9ebda5fd5f05190b9c2941",
+    "content-hash": "aacc25a9dd10ed99db8f3e7b107471fa",
     "packages": [
+        {
+            "name": "diaolingzc/iotbot_php",
+            "version": "0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/diaolingzc/iotbot_php.git",
+                "reference": "090ab1fc977d505c7d74128fe443a51ce6c4d571"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/diaolingzc/iotbot_php/zipball/090ab1fc977d505c7d74128fe443a51ce6c4d571",
+                "reference": "090ab1fc977d505c7d74128fe443a51ce6c4d571",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Diaolingzc\\IotbotPhp\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Diaolingzc\\IotbotPhp\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "云璃",
+                    "email": "diaolingzc@sina.com"
+                }
+            ],
+            "description": "iotbot_php",
+            "time": "2020-05-15T15:45:46+00:00"
+        },
         {
             "name": "dnoegel/php-xdg-base-dir",
             "version": "v0.1.1",
