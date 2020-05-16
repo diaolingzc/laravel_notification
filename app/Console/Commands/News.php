@@ -43,7 +43,7 @@ class News extends Command
 
         $message = '腾讯新闻：'. date('Y-m-d H:i:s') . PHP_EOL;
         for ($i=0; $i < count($response['data']); $i++) { 
-          $message .= PHP_EOL . $response['data'][$i]['title'] . PHP_EOL . $response['data'][$i]['vurl'] ;
+          $message .= PHP_EOL . $response['data'][$i]['title'] . ": " . substr($response['data'][$i]['surl'], 7);
         }
         $this->info($message);
         $data = [

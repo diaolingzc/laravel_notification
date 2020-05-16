@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aacc25a9dd10ed99db8f3e7b107471fa",
+    "content-hash": "a9bb7a601ee7d7c10217c9b0e0cd1eed",
     "packages": [
         {
             "name": "diaolingzc/iotbot_php",
-            "version": "0.0.2",
+            "version": "0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/diaolingzc/iotbot_php.git",
-                "reference": "090ab1fc977d505c7d74128fe443a51ce6c4d571"
+                "reference": "6bee5304b5d8824165d27774bdbc128482f9bc04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/diaolingzc/iotbot_php/zipball/090ab1fc977d505c7d74128fe443a51ce6c4d571",
-                "reference": "090ab1fc977d505c7d74128fe443a51ce6c4d571",
+                "url": "https://api.github.com/repos/diaolingzc/iotbot_php/zipball/6bee5304b5d8824165d27774bdbc128482f9bc04",
+                "reference": "6bee5304b5d8824165d27774bdbc128482f9bc04",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -56,7 +56,7 @@
                 }
             ],
             "description": "iotbot_php",
-            "time": "2020-05-15T15:45:46+00:00"
+            "time": "2020-05-16T01:36:46+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
