@@ -30,10 +30,13 @@ class IotBotRevokeMsgNotification implements ShouldQueue
      */
     public function handleRevokeMsg(IotBotGroup $event)
     {
+        Log::info('handleRevokeMsg: '. date('Y-m-d H:i:s'));
         $data = $event->getData();
 
         if ($data['MsgType'] === 'PicMsg' && $data['FromUserId'] === (int) config('iotbot.robot_qq')) {
             Notification::send(request()->user(), new IotBotRevokeMsgChannelNotification($data));
         }
+        Log::info('handleRevokeMsgEnd: '. date('Y-m-d H:i:s'));
+        return;
     }
 }

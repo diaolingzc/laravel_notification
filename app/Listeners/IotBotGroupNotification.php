@@ -23,10 +23,11 @@ class IotBotGroupNotification implements ShouldQueue
      */
     public function handleToSeTu(IotBotGroup $event)
     {
+        Log::info('handleToSeTu：'. date('Y-m-d H:i:s'));
         $data = $event->getData();
 
-        if (in_array($data['FromGroupId'],config('iotbot.white_group')) && strstr($data['Content'], 'setu')) {
-          $callback = [
+        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'setu')) {
+            $callback = [
               'toUser' => $data['FromGroupId'] ,
               'sendToType' => 2,
               'sendMsgType' => 'TextMsg',
@@ -35,18 +36,22 @@ class IotBotGroupNotification implements ShouldQueue
               'atUser' => $data['FromUserId'],
           ];
           
-          $message = $this->getSetu(true);
+            $message = $this->getSetu(true);
         
-          if ($message != '程序异常!') {
-            $callback['sendMsgType'] = 'PicMsg';
-            $callback['content'] = '';
-            $callback['picUrl'] = $message;
-            $callback['picBase64Buf'] = '';
-            $callback['fileMd5'] = '';
-          }
-
-          Notification::send(request()->user(), new IotBotChannelNotification($callback));
-      }
+            if ($message != '程序异常!') {
+                $callback['sendMsgType'] = 'PicMsg';
+                $callback['content'] = '';
+                $callback['picUrl'] = $message;
+                $callback['picBase64Buf'] = '';
+                $callback['fileMd5'] = '';
+            }
+            Log::info(json_encode($message));
+            Log::info('Notification：'. date('Y-m-d H:i:s'));
+            Notification::send(request()->user(), new IotBotChannelNotification($callback));
+            Log::info('NotificationEnd：'. date('Y-m-d H:i:s'));
+        }
+        Log::info('handleToSeTuEnd：'. date('Y-m-d H:i:s'));
+        return;
     }
 
     /**
@@ -57,10 +62,11 @@ class IotBotGroupNotification implements ShouldQueue
      */
     public function handleSweetSentence(IotBotGroup $event)
     {
+        Log::info('handleSweetSentence：'. date('Y-m-d H:i:s'));
         $data = $event->getData();
 
-        if (in_array($data['FromGroupId'],config('iotbot.white_group')) && strstr($data['Content'], '撩我')) {
-          $callback = [
+        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], '撩我')) {
+            $callback = [
               'toUser' => $data['FromGroupId'] ,
               'sendToType' => 2,
               'sendMsgType' => 'TextMsg',
@@ -69,18 +75,21 @@ class IotBotGroupNotification implements ShouldQueue
               'atUser' => $data['FromUserId'],
           ];
           
-          $message = $this->getSweetSentence();
+            $message = $this->getSweetSentence();
         
-          if ($message != '程序异常!') {
-            $callback['content'] = $message;
-          }
-
-          Notification::send(request()->user(), new IotBotChannelNotification($callback));
-      }
+            if ($message != '程序异常!') {
+                $callback['content'] = $message;
+            }
+            Log::info(json_encode($message));
+            Notification::send(request()->user(), new IotBotChannelNotification($callback));
+        }
+        Log::info('handleSweetSentenceEnd：'. date('Y-m-d H:i:s'));
+        return;
     }
 
     protected function getSetu($r18 = false)
     {
+        Log::info('getSetu: '. date('Y-m-d H:i:s'));
         $query = [
           'r18' => $r18
         ];
@@ -95,7 +104,7 @@ class IotBotGroupNotification implements ShouldQueue
         } catch (\Exception $e) {
             Log::info($e->getMessage());
         }
-
+        Log::info('getSetuEnd: '. date('Y-m-d H:i:s'));
         return $message;
     }
 
