@@ -24,6 +24,6 @@ Route::prefix('v1')->namespace('Api')->name('api.v1.')->group(function () {
   // 回复
   Route::post('sms/reply', 'SmsController@reply')->name('sms.reply');
 
-  // 天气
-  Route::get('iot/tianqi', 'IotBotController@tianqi')->name('iot.tianqi');
+  // iot callback
+  Route::post('iot/callback/{type}', 'IotBotController@callback')->name('iot.callback');
 });

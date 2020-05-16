@@ -21,6 +21,18 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\IotBot' => [
             'App\Listeners\IotBotNotification'
         ],
+
+        // 'App\Events\IotBotFriend' => [
+        //     'App\Listeners\IotBotFriendNotification'
+        // ],
+
+        // 'App\Events\IotBotGroup' => [
+        //     'App\Listeners\IotBotGroupNotification'
+        // ],
+    ];
+
+    protected $subscribe = [
+        'App\Listeners\IotBotEventSubscriber',
     ];
 
     /**

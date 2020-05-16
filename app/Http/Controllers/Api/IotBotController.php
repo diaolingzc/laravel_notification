@@ -4,42 +4,46 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\Api\IotBotRequest;
 use App\Notifications\IotBotNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
+use App\Events\IotBotFriend;
+use App\Events\IotBotGroup;
+
 
 class IotBotController extends Controller
 {
-  public function tianqi(Client $client)
-  {
-    $url = 'http://www.weather.com.cn/data/cityinfo/101280601.html';
-    $response = $client->get($url);
-    $message = $response->getBody()->getContents();
-    // Notification::send(request()->user(), new IotBotNotification('111'));
-    $data = [
-      'toUser' => config('iotbot.user_qq'),
-      'sendToType' => 1,
-      'sendMsgType' => 'TextMsg',
-      'content' => $message,
-      'groupid' => 0,
-      'atUser' => 0,
-    ];
+    public function callback(IotBotRequest $request)
+    {
+        if ($request->type === 'friend') {
+            $data = [
+                'Content' => $request->Content,
+                'FromUin' => $request->FromUin,
+                'MsgSeq' => $request->MsgSeq,
+                'MsgType' => $request->MsgType,
+                'ToUin' => $request->ToUin,
+            ];
+            event(new IotBotFriend($data));
+        }
 
-    $url = config('iotbot.web_api_path') . '?qq=' . config('iotbot.robot_qq') . '&funcname=SendMsg';
+        if ($request->type === 'group') {
+            $data = [
+                'Content' => $request->Content,
+                'FromGroupId' => $request->FromGroupId,
+                'FromGroupName' => $request->FromGroupName,
+                'FromNickName' => $request->FromNickName,
+                'FromUserId' => $request->FromUserId,
+                'MsgRandom' => $request->MsgRandom,
+                'MsgSeq' => $request->MsgSeq,
+                'MsgTime' => $request->MsgTime,
+                'MsgType' => $request->MsgType,
+            ];
+            event(new IotBotGroup($data));
+        }
 
-    // $response = $this->client->post($url, [
-    //   RequestOptions::JSON => $data
-    // ], [
-    //   'auth' => [config('iotbot.auth.name'), config('iotbot.auth.pwd'), 'basic']
-    // ]);
-
-    $response = $client->request('POST', $url, [
-      RequestOptions::JSON => $data,
-      'auth' => [config('iotbot.auth.name'), config('iotbot.auth.pwd')]
-    ]);
-    dd($response);
-    return response()->json(['result' => 0, 'errmsg' => 'OK']);
-  }
+        Log::info('接受'. date('Y-m-d H:i:s'));
+    
+        return response()->json(['result' => 0, 'errmsg' => 'OK']);
+    }
 }

@@ -47,7 +47,7 @@ class News extends Command
         }
         $this->info($message);
         $data = [
-          'toUser' => 994971017,
+          'toUser' => config('iotbot.news_group'),
           'sendToType' => 2,
           'sendMsgType' => 'TextMsg',
           'content' => $message,

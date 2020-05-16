@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9bb7a601ee7d7c10217c9b0e0cd1eed",
+    "content-hash": "c4d49af2419c9ca2113c9fed104553e9",
     "packages": [
         {
             "name": "diaolingzc/iotbot_php",
-            "version": "0.0.3",
+            "version": "0.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/diaolingzc/iotbot_php.git",
-                "reference": "6bee5304b5d8824165d27774bdbc128482f9bc04"
+                "reference": "c741172e2a46b3a773bac5e29099a130e4a1cc78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/diaolingzc/iotbot_php/zipball/6bee5304b5d8824165d27774bdbc128482f9bc04",
-                "reference": "6bee5304b5d8824165d27774bdbc128482f9bc04",
+                "url": "https://api.github.com/repos/diaolingzc/iotbot_php/zipball/c741172e2a46b3a773bac5e29099a130e4a1cc78",
+                "reference": "c741172e2a46b3a773bac5e29099a130e4a1cc78",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -56,7 +56,7 @@
                 }
             ],
             "description": "iotbot_php",
-            "time": "2020-05-16T01:36:46+00:00"
+            "time": "2020-05-16T07:30:02+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1433,6 +1433,62 @@
                 "type"
             ],
             "time": "2020-03-21T18:07:53+00:00"
+        },
+        {
+            "name": "predis/predis",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nrk/predis.git",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "ext-curl": "Allows access to Webdis when paired with phpiredis",
+                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Predis\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Alessandri",
+                    "email": "suppakilla@gmail.com",
+                    "homepage": "http://clorophilla.net"
+                }
+            ],
+            "description": "Flexible and feature-complete Redis client for PHP and HHVM",
+            "homepage": "http://github.com/nrk/predis",
+            "keywords": [
+                "nosql",
+                "predis",
+                "redis"
+            ],
+            "time": "2016-06-16T16:22:20+00:00"
         },
         {
             "name": "psr/container",
