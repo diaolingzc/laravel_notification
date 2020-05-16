@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 use App\Events\IotBot;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class IotBili extends Command
 {
@@ -40,6 +41,7 @@ class IotBili extends Command
      */
     public function handle(Client $client)
     {
+        Log::info('iot:bili 执行:' . date('Y-m-d H:i:s'));
         $live_status = Cache::get(config('iotbot.bili_up_id'), 0);
 
         $response = json_decode($client->get('https://api.live.bilibili.com/room/v1/Room/get_info?&platform=h5&room_id=' . config('iotbot.bili_up_id'))->getBody()->getContents(), true);
