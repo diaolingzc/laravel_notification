@@ -43,7 +43,7 @@ class News extends Command
 
         $message = '腾讯新闻：'. date('Y-m-d H:i:s') . PHP_EOL;
         for ($i=0; $i < count($response['data']); $i++) { 
-          $message .= PHP_EOL . $response['data'][$i]['title'] . ": " . substr($response['data'][$i]['surl'], 7);
+          $message .= PHP_EOL . $response['data'][$i]['title'] . ": " . $this->getSinaShortUrl($response['data'][$i]['surl']);
         }
         $this->info($message);
         $data = [
@@ -55,5 +55,17 @@ class News extends Command
           'atUser' => 0,
         ];
         event(new IotBot($data));
+    }
+
+    protected function getSinaShortUrl($url)
+    {
+      $client = new Client();
+      $response = $client->request('GET', 'https://api.ww125.cn/api/tcn?url=' . $url);
+
+      if ($response->getStatusCode() === 200) {
+        return substr(json_decode($response->getBody()->getContents(), true)['url'], 7);
+      } else {
+        return substr($url, 7);
+      }
     }
 }
