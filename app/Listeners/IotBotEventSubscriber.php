@@ -71,5 +71,10 @@ class IotBotEventSubscriber implements ShouldQueue
             'App\Events\IotBotGroup',
             'App\Listeners\IotBotGroupNotification@handleSweetSentence'
         );
+
+        $events->listen(
+          'App\Events\IotBotGroup',
+          'App\Listeners\IotBotGroupNotification@handleToMeiZi'
+      );
     }
 }

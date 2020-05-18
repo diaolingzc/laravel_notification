@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class IotBotGroupNotification implements ShouldQueue
 {
@@ -36,7 +37,7 @@ class IotBotGroupNotification implements ShouldQueue
               'atUser' => $data['FromUserId'],
           ];
           
-            $message = $this->getSetu(true);
+            $message = $this->getSetu();
         
             if ($message != '程序异常!') {
                 $callback['sendMsgType'] = 'PicMsg';
@@ -46,6 +47,45 @@ class IotBotGroupNotification implements ShouldQueue
                 $callback['fileMd5'] = '';
             }
             Log::info(json_encode($message));
+            Log::info('Notification：'. date('Y-m-d H:i:s'));
+            Notification::send(request()->user(), new IotBotChannelNotification($callback));
+            Log::info('NotificationEnd：'. date('Y-m-d H:i:s'));
+        }
+        Log::info('handleToSeTuEnd：'. date('Y-m-d H:i:s'));
+        return;
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  IotBotGroup  $event
+     * @return void
+     */
+    public function handleToMeiZi(IotBotGroup $event)
+    {
+        Log::info('handleToSeTu：'. date('Y-m-d H:i:s'));
+        $data = $event->getData();
+
+        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'meizi')) {
+            $callback = [
+              'toUser' => $data['FromGroupId'] ,
+              'sendToType' => 2,
+              'sendMsgType' => 'TextMsg',
+              'content' => '程序异常!',
+              'groupid' => 0,
+              'atUser' => $data['FromUserId'],
+          ];
+          
+            $meizi = DB::table('mei_nv_imgs')->inRandomOrder()->first();
+            Log::info(json_encode($meizi));
+            if ($meizi) {
+                $callback['sendMsgType'] = 'PicMsg';
+                $callback['content'] = '';
+                $callback['picUrl'] = $meizi->url;
+                $callback['picBase64Buf'] = '';
+                $callback['fileMd5'] = '';
+            }
+            Log::info(json_encode($meizi));
             Log::info('Notification：'. date('Y-m-d H:i:s'));
             Notification::send(request()->user(), new IotBotChannelNotification($callback));
             Log::info('NotificationEnd：'. date('Y-m-d H:i:s'));
