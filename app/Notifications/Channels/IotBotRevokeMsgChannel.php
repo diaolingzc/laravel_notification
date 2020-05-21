@@ -34,7 +34,9 @@ class IotBotRevokeMsgChannel
 	{
 		$message = $notification->toIotBotRevokeMsg($notifiable);
 
-    $this->client->setGuzzleOptions(['auth' => ['iotqq', 12345678]]);
+    if (config('iotbot.auth.user')) {
+      $this->client->setGuzzleOptions(['auth' => [config('iotbot.auth.user'), config('iotbot.auth.pwd')]]);
+    }
     
     $response = $this->client->RevokeMsg($message['FromGroupId'], $message['MsgSeq'], $message['MsgRandom']);
 

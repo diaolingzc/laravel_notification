@@ -27,8 +27,10 @@ class IotBotChannel
 	{
 		$message = $notification->toIotBot($notifiable);
 
-		$this->client->setGuzzleOptions(['auth' => ['iotqq', 12345678]]);
-
+    if (config('iotbot.auth.user')) {
+      $this->client->setGuzzleOptions(['auth' => [config('iotbot.auth.user'), config('iotbot.auth.pwd')]]);
+    }
+    
 		switch ($message['sendMsgType']) {
 			case 'TextMsg':
 				$response = $this->client->sendTextMsg($message['toUser'], $message['sendToType'], $message['content'], $message['groupid'], $message['atUser']);
