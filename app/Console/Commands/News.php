@@ -60,7 +60,8 @@ class News extends Command
     protected function getSinaShortUrl($url)
     {
       $client = new Client();
-      $response = $client->request('GET', 'https://api.ww125.cn/api/tcn?url=' . $url);
+      $url = 'http://suo.im/api.htm?format=json&url=' . urlencode($url) . '&key=' . config('iotbot.suoim_key') . '&expireDate=' . date("Y-m-d",strtotime("+1 day"));
+      $response = $client->request('GET', $url);
 
       if ($response->getStatusCode() === 200) {
         return substr(json_decode($response->getBody()->getContents(), true)['url'], 7);

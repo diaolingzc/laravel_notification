@@ -73,8 +73,18 @@ class IotBotEventSubscriber implements ShouldQueue
         );
 
         $events->listen(
+            'App\Events\IotBotGroup',
+            'App\Listeners\IotBotGroupNotification@handleToMeiZi'
+        );
+
+        $events->listen(
+            'App\Events\IotBotGroup',
+            'App\Listeners\IotBotGroupNotification@handleToJio'
+        );
+
+        $events->listen(
           'App\Events\IotBotGroup',
-          'App\Listeners\IotBotGroupNotification@handleToMeiZi'
+          'App\Listeners\IotBotGroupNotification@handleToNaiZi'
       );
     }
 }

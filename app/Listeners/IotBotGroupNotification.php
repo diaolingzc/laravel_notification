@@ -100,6 +100,82 @@ class IotBotGroupNotification implements ShouldQueue
      * @param  IotBotGroup  $event
      * @return void
      */
+    public function handleToJio(IotBotGroup $event)
+    {
+        Log::info('handleToJio'. date('Y-m-d H:i:s'));
+        $data = $event->getData();
+
+        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'jio')) {
+            $callback = [
+              'toUser' => $data['FromGroupId'] ,
+              'sendToType' => 2,
+              'sendMsgType' => 'TextMsg',
+              'content' => '程序异常!',
+              'groupid' => 0,
+              'atUser' => $data['FromUserId'],
+          ];
+          
+            $meizi = DB::table('mei_nv_imgs')->where('tag', '丝袜美腿')->inRandomOrder()->first();
+            Log::info(json_encode($meizi));
+            if ($meizi) {
+                $callback['sendMsgType'] = 'PicMsg';
+                $callback['content'] = '';
+                $callback['picUrl'] = $meizi->url;
+                $callback['picBase64Buf'] = '';
+                $callback['fileMd5'] = '';
+            }
+            Log::info('Notification：'. date('Y-m-d H:i:s'));
+            Notification::send(request()->user(), new IotBotChannelNotification($callback));
+            Log::info('NotificationEnd：'. date('Y-m-d H:i:s'));
+        }
+        Log::info('handleToJioEnd: '. date('Y-m-d H:i:s'));
+        return;
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  IotBotGroup  $event
+     * @return void
+     */
+    public function handleToNaiZi(IotBotGroup $event)
+    {
+        Log::info('handleToNaiZi'. date('Y-m-d H:i:s'));
+        $data = $event->getData();
+
+        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'naizi')) {
+            $callback = [
+              'toUser' => $data['FromGroupId'] ,
+              'sendToType' => 2,
+              'sendMsgType' => 'TextMsg',
+              'content' => '程序异常!',
+              'groupid' => 0,
+              'atUser' => $data['FromUserId'],
+          ];
+          
+            $meizi = DB::table('mei_nv_imgs')->where('tag', '巨乳')->inRandomOrder()->first();
+            Log::info(json_encode($meizi));
+            if ($meizi) {
+                $callback['sendMsgType'] = 'PicMsg';
+                $callback['content'] = '';
+                $callback['picUrl'] = $meizi->url;
+                $callback['picBase64Buf'] = '';
+                $callback['fileMd5'] = '';
+            }
+            Log::info('Notification：'. date('Y-m-d H:i:s'));
+            Notification::send(request()->user(), new IotBotChannelNotification($callback));
+            Log::info('NotificationEnd：'. date('Y-m-d H:i:s'));
+        }
+        Log::info('handleToNaiZiEnd: '. date('Y-m-d H:i:s'));
+        return;
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  IotBotGroup  $event
+     * @return void
+     */
     public function handleSweetSentence(IotBotGroup $event)
     {
         Log::info('handleSweetSentence：'. date('Y-m-d H:i:s'));

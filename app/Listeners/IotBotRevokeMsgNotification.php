@@ -20,7 +20,7 @@ class IotBotRevokeMsgNotification implements ShouldQueue
 {
     use InteractsWithQueue;
 
-    public $delay = 10;
+    public $delay = 30;
 
     /**
      * Handle the event.

@@ -9,5 +9,6 @@ return [
   'auth' => [
     'user' => env('IOT_BOT_AUTH_USER') ?? null,
     'pwd' => env('IOT_BOT_AUTH_PWD') ?? null,
-  ]
+  ],
+  'suoim_key' => env('IOT_BOT_SUOIM_KEY')
 ];

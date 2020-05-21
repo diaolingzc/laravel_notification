@@ -32,7 +32,9 @@ class Kernel extends ConsoleKernel
         })->everyMinute();;
         $schedule->command('iot:bili')->everyMinute();
 
-        $schedule->command('iot:news')->twiceDaily(8, 12, 18, 22);
+        $schedule->command('iot:news')->twiceDaily(8, 12);
+
+        $schedule->command('iot:news')->twiceDaily(17, 22);
     }
 
     /**
