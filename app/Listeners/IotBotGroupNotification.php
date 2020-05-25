@@ -192,14 +192,15 @@ class IotBotGroupNotification implements ShouldQueue
           ];
           
             $coser = DB::table('coser_imgs')->inRandomOrder()->first();
-            Log::info(json_encode($coser));
+            
             if ($coser) {
                 $callback['sendMsgType'] = 'PicMsg';
                 $callback['content'] = '';
-                $callback['picUrl'] = $coser->url;
-                $callback['picBase64Buf'] = '';
+                $callback['picUrl'] = '';
+                $callback['picBase64Buf'] = $this->webImgToBase64($coser->url);
                 $callback['fileMd5'] = '';
             }
+            Log::info(json_encode($callback));
             Log::info('Notification：'. date('Y-m-d H:i:s'));
             Notification::send(request()->user(), new IotBotChannelNotification($callback));
             Log::info('NotificationEnd：'. date('Y-m-d H:i:s'));
@@ -276,5 +277,12 @@ class IotBotGroupNotification implements ShouldQueue
         }
 
         return $message;
+    }
+
+    protected function webImgToBase64(string $img = '')
+    {
+        $refer = 'https://amlyu.com/';
+        $context = stream_context_create(['http' => ['header' => 'Referer: ' . $refer]]);
+        return chunk_split(base64_encode(file_get_contents($img, false, $context)));
     }
 }
