@@ -176,6 +176,44 @@ class IotBotGroupNotification implements ShouldQueue
      * @param  IotBotGroup  $event
      * @return void
      */
+    public function handleToCoser(IotBotGroup $event)
+    {
+        Log::info('handleToCoser'. date('Y-m-d H:i:s'));
+        $data = $event->getData();
+
+        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'cos')) {
+            $callback = [
+              'toUser' => $data['FromGroupId'] ,
+              'sendToType' => 2,
+              'sendMsgType' => 'TextMsg',
+              'content' => '程序异常!',
+              'groupid' => 0,
+              'atUser' => $data['FromUserId'],
+          ];
+          
+            $coser = DB::table('coser_imgs')->inRandomOrder()->first();
+            Log::info(json_encode($coser));
+            if ($coser) {
+                $callback['sendMsgType'] = 'PicMsg';
+                $callback['content'] = '';
+                $callback['picUrl'] = $coser->url;
+                $callback['picBase64Buf'] = '';
+                $callback['fileMd5'] = '';
+            }
+            Log::info('Notification：'. date('Y-m-d H:i:s'));
+            Notification::send(request()->user(), new IotBotChannelNotification($callback));
+            Log::info('NotificationEnd：'. date('Y-m-d H:i:s'));
+        }
+        Log::info('handleToCoserEnd: '. date('Y-m-d H:i:s'));
+        return;
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  IotBotGroup  $event
+     * @return void
+     */
     public function handleSweetSentence(IotBotGroup $event)
     {
         Log::info('handleSweetSentence：'. date('Y-m-d H:i:s'));
