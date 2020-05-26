@@ -242,6 +242,54 @@ class IotBotGroupNotification implements ShouldQueue
         return;
     }
 
+    /**
+     * Handle the event.
+     *
+     * @param  IotBotGroup  $event
+     * @return void
+     */
+    public function handleToReStart(IotBotGroup $event)
+    {
+        Log::info('handleToReStart'. date('Y-m-d H:i:s'));
+        $data = $event->getData();
+
+        if ($data['FromUserId'] === (int) config('iotbot.master') && strstr($data['Content'], '重启')) {
+            $callback = [
+                'toUser' => $data['FromGroupId'] ,
+                'sendToType' => 2,
+                'sendMsgType' => 'TextMsg',
+                'content' => '程序异常!',
+                'groupid' => 0,
+                'atUser' => $data['FromUserId'],
+            ];
+
+            switch ($data['Content']) {
+              case '重启iot':
+                  exec(config('iotbot.shell.iot_stop'),  $output);
+                  exec(config('iot_start.shell.iot_start'));
+                  break;
+
+              case '重启sup':
+                exec(config('iotbot.shell.supervisorctl'),  $output);
+                  break;
+              default:
+                  $output = '命令未知!';
+                  break;
+            }
+
+            Log::info(json_encode($output));
+            $message = $this->getSweetSentence();
+        
+            if ($output != '命令未知!') {
+                $callback['content'] = '重启成功!';
+            }
+            Log::info(json_encode($message));
+            Notification::send(request()->user(), new IotBotChannelNotification($callback));
+        }
+        Log::info('handleToReStartEnd：'. date('Y-m-d H:i:s'));
+        return;
+    }
+
     protected function getSetu($r18 = false)
     {
         Log::info('getSetu: '. date('Y-m-d H:i:s'));

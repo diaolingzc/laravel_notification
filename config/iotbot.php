@@ -10,5 +10,10 @@ return [
     'user' => env('IOT_BOT_AUTH_USER') ?? null,
     'pwd' => env('IOT_BOT_AUTH_PWD') ?? null,
   ],
-  'suoim_key' => env('IOT_BOT_SUOIM_KEY')
+  'suoim_key' => env('IOT_BOT_SUOIM_KEY'),
+  'shell' => [
+    'iot_stop' => env('IOT_BOT_SHELL_IOT_STOP'),
+    'iot_start' => env('IOT_BOT_SHELL_IOT_START'),
+    'supervisorctl' => env('IOT_BOT_SHELL_SUPERVISORCTL')
+  ]
 ];
