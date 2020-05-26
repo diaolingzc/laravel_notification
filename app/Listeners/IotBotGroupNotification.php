@@ -263,10 +263,11 @@ class IotBotGroupNotification implements ShouldQueue
                 'atUser' => $data['FromUserId'],
             ];
 
+            $output = '';
             switch ($data['Content']) {
               case '重启iot':
                   exec(config('iotbot.shell.iot_stop'),  $output);
-                  exec(config('iot_start.shell.iot_start'));
+                  exec(config('iotbot.shell.iot_start'));
                   break;
 
               case '重启sup':
@@ -278,12 +279,12 @@ class IotBotGroupNotification implements ShouldQueue
             }
 
             Log::info(json_encode($output));
-            $message = $this->getSweetSentence();
         
             if ($output != '命令未知!') {
                 $callback['content'] = '重启成功!';
             }
-            Log::info(json_encode($message));
+            Log::info(json_encode($callback));
+            sleep(10);
             Notification::send(request()->user(), new IotBotChannelNotification($callback));
         }
         Log::info('handleToReStartEnd：'. date('Y-m-d H:i:s'));
