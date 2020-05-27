@@ -14,22 +14,20 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
      */
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->call(function () {
-          Log::info(date('Y-m-d H:i:s'));
-        })->everyMinute();;
+            Log::info(date('Y-m-d H:i:s'));
+        })->everyMinute();
         $schedule->command('iot:bili')->everyMinute();
 
         $schedule->command('iot:news')->twiceDaily(8, 12);
@@ -39,8 +37,6 @@ class Kernel extends ConsoleKernel
 
     /**
      * Register the commands for the application.
-     *
-     * @return void
      */
     protected function commands()
     {

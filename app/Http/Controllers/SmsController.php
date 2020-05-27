@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Notification;
 
 class SmsController extends Controller
 {
-  public function robot()
-  {
-    Notification::send(request()->user(), new RobotNotification('111'));
-  }
+    public function robot()
+    {
+        Notification::send(request()->user(), new RobotNotification('111'));
+    }
 }

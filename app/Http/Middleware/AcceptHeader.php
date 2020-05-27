@@ -6,10 +6,10 @@ use Closure;
 
 class AcceptHeader
 {
-  public function handle($request, Closure $next)
-  {
-    $request->headers->set('Accept', 'application/json');
+    public function handle($request, Closure $next)
+    {
+        $request->headers->set('Accept', 'application/json');
 
-    return $next($request);
-  }
+        return $next($request);
+    }
 }

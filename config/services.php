@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -34,5 +33,4 @@ return [
         'webApiBaseUrl' => env('IOT_BOT_WEB_API_BASE_URL'),
         'robotQQ' => env('IOT_BOT_REBOT_QQ'),
     ],
-
 ];

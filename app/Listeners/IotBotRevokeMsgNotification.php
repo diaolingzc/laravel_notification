@@ -5,7 +5,7 @@
  * @LastEditTime: 2020-05-16 15:46:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- */ 
+ */
 
 namespace App\Listeners;
 
@@ -25,18 +25,18 @@ class IotBotRevokeMsgNotification implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  IotBotGroup  $event
-     * @return void
+     * @param IotBotGroup $event
      */
     public function handleRevokeMsg(IotBotGroup $event)
     {
-        Log::info('handleRevokeMsg: '. date('Y-m-d H:i:s'));
+        Log::info('handleRevokeMsg: '.date('Y-m-d H:i:s'));
         $data = $event->getData();
 
-        if ($data['MsgType'] === 'PicMsg' && $data['FromUserId'] === (int) config('iotbot.robot_qq')) {
+        if ('PicMsg' === $data['MsgType'] && $data['FromUserId'] === (int) config('iotbot.robot_qq')) {
             Notification::send(request()->user(), new IotBotRevokeMsgChannelNotification($data));
         }
-        Log::info('handleRevokeMsgEnd: '. date('Y-m-d H:i:s'));
+        Log::info('handleRevokeMsgEnd: '.date('Y-m-d H:i:s'));
+
         return;
     }
 }

@@ -3,20 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\Api\IotBotRequest;
-use App\Notifications\IotBotNotification;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
 use App\Events\IotBotFriend;
 use App\Events\IotBotGroup;
-
 
 class IotBotController extends Controller
 {
     public function callback(IotBotRequest $request)
     {
-        if ($request->type === 'friend') {
+        if ('friend' === $request->type) {
             $data = [
                 'Content' => $request->Content,
                 'FromUin' => $request->FromUin,
@@ -27,7 +23,7 @@ class IotBotController extends Controller
             event(new IotBotFriend($data));
         }
 
-        if ($request->type === 'group') {
+        if ('group' === $request->type) {
             $data = [
                 'Content' => $request->Content,
                 'FromGroupId' => $request->FromGroupId,
@@ -42,8 +38,8 @@ class IotBotController extends Controller
             event(new IotBotGroup($data));
         }
 
-        Log::info('RequestTime: '. date('Y-m-d H:i:s'));
-    
+        Log::info('RequestTime: '.date('Y-m-d H:i:s'));
+
         return response()->json(['result' => 0, 'errmsg' => 'OK']);
     }
 }

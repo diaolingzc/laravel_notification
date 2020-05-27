@@ -19,7 +19,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         'App\Events\IotBot' => [
-            'App\Listeners\IotBotNotification'
+            'App\Listeners\IotBotNotification',
         ],
 
         // 'App\Events\IotBotFriend' => [
@@ -37,13 +37,9 @@ class EventServiceProvider extends ServiceProvider
 
     /**
      * Register any events for your application.
-     *
-     * @return void
      */
     public function boot()
     {
         parent::boot();
-
-        //
     }
 }
