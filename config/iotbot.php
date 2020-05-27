@@ -1,7 +1,8 @@
 <?php
+
 return [
-  'master' =>  explode(',', env('IOT_BOT_MASTER_QQ')),
-  'white_group'=> explode(',', env('IOT_BOT_WHITE_GROUP')),
+  'master' => explode(',', env('IOT_BOT_MASTER_QQ')),
+  'white_group' => explode(',', env('IOT_BOT_WHITE_GROUP')),
   'robot_qq' => env('IOT_BOT_REBOT_QQ'),
   'news_group' => env('IOT_BOT_NEWS_GROUP'),
   'bili_up_id' => env('IOT_BOT_BILI_UP_ID'),
@@ -14,6 +15,6 @@ return [
   'shell' => [
     'iot_stop' => env('IOT_BOT_SHELL_IOT_STOP'),
     'iot_start' => env('IOT_BOT_SHELL_IOT_START'),
-    'supervisorctl' => env('IOT_BOT_SHELL_SUPERVISORCTL')
-  ]
+    'supervisorctl' => env('IOT_BOT_SHELL_SUPERVISORCTL'),
+  ],
 ];

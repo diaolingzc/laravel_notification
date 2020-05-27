@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Requests\Api;
+
 use Illuminate\Http\Request;
 
 class IotBotRequest extends FormRequest
 {
-
     protected $friendMsgRules = [
       'Content' => 'required|String',
       'FromUin' => 'required|integer',
@@ -25,6 +25,7 @@ class IotBotRequest extends FormRequest
       'MsgTime' => 'required|integer',
       'MsgType' => 'required|String',
     ];
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -34,9 +35,10 @@ class IotBotRequest extends FormRequest
     {
         $rules = $this->friendMsgRules;
 
-        if ($request->type === 'group') {
-          $rules = $this->groupMsgRules;
+        if ('group' === $request->type) {
+            $rules = $this->groupMsgRules;
         }
+
         return $rules;
     }
 }

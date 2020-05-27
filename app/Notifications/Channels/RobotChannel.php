@@ -8,37 +8,36 @@ use Illuminate\Notifications\Notification;
 
 class RobotChannel
 {
-  protected $client;
+    protected $client;
 
-  public function __construct(Client $client)
-  {
-    $this->client = $client;
-  }
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
 
-  /**
-   * 发送指定的通知.
-   *
-   * @param  mixed  $notifiable
-   * @param  \Illuminate\Notifications\Notification  $notification
-   * @return void
-   */
-  public function send($notifiable, Notification $notification)
-  {
-    $message = $notification->toWechatRobot($notifiable);
+    /**
+     * 发送指定的通知.
+     *
+     * @param mixed                                  $notifiable
+     * @param \Illuminate\Notifications\Notification $notification
+     */
+    public function send($notifiable, Notification $notification)
+    {
+        $message = $notification->toWechatRobot($notifiable);
 
-    $data = [
+        $data = [
       'msgtype' => 'markdown',
       'markdown' => [
-        'content' => $message
-      ]
+        'content' => $message,
+      ],
     ];
 
-    $key = config('wechat.SmsRobotKey');
+        $key = config('wechat.SmsRobotKey');
 
-    $url = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=' . $key;
+        $url = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key='.$key;
 
-    $response = $this->client->post($url, [
-      RequestOptions::JSON => $data
+        $response = $this->client->post($url, [
+      RequestOptions::JSON => $data,
     ]);
-  }
+    }
 }

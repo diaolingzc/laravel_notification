@@ -24,8 +24,6 @@ class News extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -41,9 +39,9 @@ class News extends Command
     {
         $response = json_decode($client->get('https://pacaio.match.qq.com/irs/rcd?cid=108&ext=&token=349ee24cdf9327a050ddad8c166bd3e3&page=1&expIds=')->getBody()->getContents(), true);
 
-        $message = '腾讯新闻：'. date('Y-m-d H:i:s') . PHP_EOL;
-        for ($i=0; $i < count($response['data']); $i++) { 
-          $message .= PHP_EOL . $response['data'][$i]['title'] . ": " . $this->getSinaShortUrl($response['data'][$i]['surl']);
+        $message = '腾讯新闻：'.date('Y-m-d H:i:s').PHP_EOL;
+        for ($i = 0; $i < count($response['data']); ++$i) {
+            $message .= PHP_EOL.$response['data'][$i]['title'].': '.$this->getSinaShortUrl($response['data'][$i]['surl']);
         }
         $this->info($message);
         $data = [
@@ -59,14 +57,14 @@ class News extends Command
 
     protected function getSinaShortUrl($url)
     {
-      $client = new Client();
-      $url = 'http://suo.im/api.htm?format=json&url=' . urlencode($url) . '&key=' . config('iotbot.suoim_key') . '&expireDate=' . date("Y-m-d",strtotime("+1 day"));
-      $response = $client->request('GET', $url);
+        $client = new Client();
+        $url = 'http://suo.im/api.htm?format=json&url='.urlencode($url).'&key='.config('iotbot.suoim_key').'&expireDate='.date('Y-m-d', strtotime('+1 day'));
+        $response = $client->request('GET', $url);
 
-      if ($response->getStatusCode() === 200) {
-        return substr(json_decode($response->getBody()->getContents(), true)['url'], 7);
-      } else {
-        return substr($url, 7);
-      }
+        if (200 === $response->getStatusCode()) {
+            return substr(json_decode($response->getBody()->getContents(), true)['url'], 7);
+        } else {
+            return substr($url, 7);
+        }
     }
 }

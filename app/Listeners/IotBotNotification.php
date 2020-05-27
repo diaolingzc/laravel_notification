@@ -11,11 +11,11 @@ use App\Notifications\IotBotNotification as IotBotChannelNotification;
 class IotBotNotification implements ShouldQueue
 {
     use InteractsWithQueue;
+
     /**
      * Handle the event.
      *
-     * @param  IotBot  $event
-     * @return void
+     * @param IotBot $event
      */
     public function handle(IotBot $event)
     {

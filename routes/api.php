@@ -14,16 +14,16 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-  return $request->user();
+    return $request->user();
 });
 
 Route::prefix('v1')->namespace('Api')->name('api.v1.')->group(function () {
-  // 状态报告
-  Route::post('sms/callback', 'SmsController@callback')->name('sms.callback');
+    // 状态报告
+    Route::post('sms/callback', 'SmsController@callback')->name('sms.callback');
 
-  // 回复
-  Route::post('sms/reply', 'SmsController@reply')->name('sms.reply');
+    // 回复
+    Route::post('sms/reply', 'SmsController@reply')->name('sms.reply');
 
-  // iot callback
-  Route::post('iot/callback/{type}', 'IotBotController@callback')->name('iot.callback');
+    // iot callback
+    Route::post('iot/callback/{type}', 'IotBotController@callback')->name('iot.callback');
 });

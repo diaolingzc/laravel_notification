@@ -13,11 +13,11 @@ use GuzzleHttp\Client;
 class IotBotFriendNotification implements ShouldQueue
 {
     use InteractsWithQueue;
+
     /**
      * Handle the event.
      *
-     * @param  IotBotFriend  $event
-     * @return void
+     * @param IotBotFriend $event
      */
     public function handleToSeTu(IotBotFriend $event)
     {
@@ -25,22 +25,22 @@ class IotBotFriendNotification implements ShouldQueue
 
         if ($data['FromUin'] === (int) config('iotbot.master')[0] && strstr($data['Content'], 'setu')) {
             $callback = [
-                'toUser' => $data['FromUin'] ,
+                'toUser' => $data['FromUin'],
                 'sendToType' => 1,
                 'sendMsgType' => 'TextMsg',
                 'content' => '程序异常!',
                 'groupid' => 0,
                 'atUser' => 0,
             ];
-            
+
             $message = $this->getSetu(true);
-          
-            if ($message != '程序异常!') {
-              $callback['sendMsgType'] = 'PicMsg';
-              $callback['content'] = '';
-              $callback['picUrl'] = $message;
-              $callback['picBase64Buf'] = '';
-              $callback['fileMd5'] = '';
+
+            if ('程序异常!' != $message) {
+                $callback['sendMsgType'] = 'PicMsg';
+                $callback['content'] = '';
+                $callback['picUrl'] = $message;
+                $callback['picBase64Buf'] = '';
+                $callback['fileMd5'] = '';
             }
 
             Notification::send(request()->user(), new IotBotChannelNotification($callback));
@@ -57,45 +57,45 @@ class IotBotFriendNotification implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  IotBotFriend  $event
-     * @return void
+     * @param IotBotFriend $event
      */
     public function handleSweetSentence(IotBotFriend $event)
     {
         $data = $event->getData();
 
         if (strstr($data['Content'], '撩我')) {
-          $callback = [
-              'toUser' => $data['FromUin'] ,
+            $callback = [
+              'toUser' => $data['FromUin'],
               'sendToType' => 1,
               'sendMsgType' => 'TextMsg',
               'content' => '程序异常!',
               'groupid' => 0,
               'atUser' => 0,
           ];
-          
-          $message = $this->getSweetSentence();
-        
-          if ($message != '程序异常!') {
-            $callback['content'] = $message;
-          }
 
-          Notification::send(request()->user(), new IotBotChannelNotification($callback));
-      }
+            $message = $this->getSweetSentence();
+
+            if ('程序异常!' != $message) {
+                $callback['content'] = $message;
+            }
+
+            Notification::send(request()->user(), new IotBotChannelNotification($callback));
+        }
     }
 
     protected function getSetu($r18 = false)
     {
         $query = [
-          'r18' => $r18
+          'r18' => $r18,
         ];
         $message = '程序异常!';
+
         try {
             $client = new Client();
             $response = $client->request('GET', 'http://api.yuban10703.xyz:2333/setu', ['query' => $query]);
-            if ($response->getStatusCode() === 200) {
+            if (200 === $response->getStatusCode()) {
                 $response = json_decode($response->getBody()->getContents(), true);
-                $message = 'https://cdn.jsdelivr.net/gh/laosepi/setu/pics/' . $response['filename'][0];
+                $message = 'https://cdn.jsdelivr.net/gh/laosepi/setu/pics/'.$response['filename'][0];
             }
         } catch (\Exception $e) {
             Log::info($e->getMessage());
@@ -107,10 +107,11 @@ class IotBotFriendNotification implements ShouldQueue
     protected function getSweetSentence()
     {
         $message = '程序异常!';
+
         try {
             $client = new Client();
             $response = $client->request('GET', 'https://chp.shadiao.app/api.php');
-            if ($response->getStatusCode() === 200) {
+            if (200 === $response->getStatusCode()) {
                 $message = $response->getBody()->getContents();
             }
         } catch (\Exception $e) {
