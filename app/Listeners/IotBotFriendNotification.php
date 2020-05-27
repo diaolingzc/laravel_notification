@@ -23,7 +23,7 @@ class IotBotFriendNotification implements ShouldQueue
     {
         $data = $event->getData();
 
-        if ($data['FromUin'] === (int) config('iotbot.master') && strstr($data['Content'], 'setu')) {
+        if ($data['FromUin'] === (int) config('iotbot.master')[0] && strstr($data['Content'], 'setu')) {
             $callback = [
                 'toUser' => $data['FromUin'] ,
                 'sendToType' => 1,

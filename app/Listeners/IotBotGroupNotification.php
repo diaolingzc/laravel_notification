@@ -253,7 +253,7 @@ class IotBotGroupNotification implements ShouldQueue
         Log::info('handleToReStart'. date('Y-m-d H:i:s'));
         $data = $event->getData();
 
-        if ($data['FromUserId'] === (int) config('iotbot.master') && strstr($data['Content'], '重启')) {
+        if (in_array($data['FromUserId'], config('iotbot.master')) && strstr($data['Content'], '重启')) {
             $callback = [
                 'toUser' => $data['FromGroupId'] ,
                 'sendToType' => 2,

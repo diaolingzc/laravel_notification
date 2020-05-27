@@ -42,7 +42,7 @@ class IotBotController extends Controller
             event(new IotBotGroup($data));
         }
 
-        Log::info('请求时间'. date('Y-m-d H:i:s'));
+        Log::info('RequestTime: '. date('Y-m-d H:i:s'));
     
         return response()->json(['result' => 0, 'errmsg' => 'OK']);
     }
