@@ -26,6 +26,7 @@ class IotBotGroupNotification implements ShouldQueue
     {
         Log::info('handleToSeTu：'. date('Y-m-d H:i:s'));
         $data = $event->getData();
+        $is_r18 = Cache::get('iotbot_is_r18', 0);
 
         if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'setu')) {
             $callback = [
@@ -37,7 +38,7 @@ class IotBotGroupNotification implements ShouldQueue
               'atUser' => $data['FromUserId'],
           ];
           
-            $message = $this->getSetu();
+            $message = $this->getSetu($is_r18);
         
             if ($message != '程序异常!') {
                 $callback['sendMsgType'] = 'PicMsg';
@@ -180,6 +181,7 @@ class IotBotGroupNotification implements ShouldQueue
     {
         Log::info('handleToCoser'. date('Y-m-d H:i:s'));
         $data = $event->getData();
+        $is_r18 = Cache::get('iotbot_is_r18', 0);
 
         if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'cos')) {
             $callback = [
@@ -191,7 +193,7 @@ class IotBotGroupNotification implements ShouldQueue
               'atUser' => $data['FromUserId'],
           ];
           
-            $coser = DB::table('coser_imgs')->inRandomOrder()->first();
+            $coser = DB::table('coser_imgs')->where('is_r18', $is_r18)->inRandomOrder()->first();
             
             if ($coser) {
                 $callback['sendMsgType'] = 'PicMsg';
@@ -269,10 +271,6 @@ class IotBotGroupNotification implements ShouldQueue
                   exec(config('iotbot.shell.iot_stop'),  $output);
                   exec(config('iotbot.shell.iot_start'));
                   break;
-
-              case '重启sup':
-                exec(config('iotbot.shell.supervisorctl'),  $output);
-                  break;
               default:
                   $output = '命令未知!';
                   break;
@@ -288,6 +286,57 @@ class IotBotGroupNotification implements ShouldQueue
             Notification::send(request()->user(), new IotBotChannelNotification($callback));
         }
         Log::info('handleToReStartEnd：'. date('Y-m-d H:i:s'));
+        return;
+    }
+
+        /**
+     * Handle the event.
+     *
+     * @param  IotBotGroup  $event
+     * @return void
+     */
+    public function handleToSetR18(IotBotGroup $event)
+    {
+        Log::info('handleToSetR18'. date('Y-m-d H:i:s'));
+        $data = $event->getData();
+
+        if (in_array($data['FromUserId'], config('iotbot.master')) && strstr($data['Content'], 'r18')) {
+            $callback = [
+                'toUser' => $data['FromGroupId'] ,
+                'sendToType' => 2,
+                'sendMsgType' => 'TextMsg',
+                'content' => '命令未知!',
+                'groupid' => 0,
+                'atUser' => $data['FromUserId'],
+            ];
+
+            $output = '';
+            switch ($data['Content']) {
+              case '开启r18':
+                  Cache::put(config('iotbot.bili_up_id'), 1);
+                  $output = '已开启 r18 模式！';
+                  break;
+
+              case '关闭r18':
+                  Cache::put(config('iotbot.bili_up_id'), 0);
+                  $output = '已关闭 r18 模式！';
+                  break;
+
+              default:
+                  $output = '命令未知!';
+                  break;
+            }
+
+            Log::info(json_encode($output));
+        
+            if ($output != '命令未知!') {
+                $callback['content'] = $output;
+            }
+            Log::info(json_encode($callback));
+            sleep(10);
+            Notification::send(request()->user(), new IotBotChannelNotification($callback));
+        }
+        Log::info('handleToSetR18End：'. date('Y-m-d H:i:s'));
         return;
     }
 
@@ -330,7 +379,7 @@ class IotBotGroupNotification implements ShouldQueue
 
     protected function webImgToBase64(string $img = '')
     {
-        $refer = 'https://amlyu.com/';
+        $refer = pathinfo($img)['dirname'];
         $context = stream_context_create(['http' => ['header' => 'Referer: ' . $refer]]);
         return chunk_split(base64_encode(file_get_contents($img, false, $context)));
     }
