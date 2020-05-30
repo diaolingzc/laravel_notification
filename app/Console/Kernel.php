@@ -33,6 +33,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('iot:news')->twiceDaily(8, 12);
 
         $schedule->command('iot:news')->twiceDaily(17, 22);
+
+        $schedule->command('iot:github')->twiceDaily(18);
     }
 
     /**
