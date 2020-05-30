@@ -28,6 +28,8 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             Log::info(date('Y-m-d H:i:s'));
         })->everyMinute();
+        $schedule->command('command:dailyJobs')->everyMinute();
+
         $schedule->command('iot:bili')->everyMinute();
 
         $schedule->command('iot:news')->twiceDaily(8, 12);

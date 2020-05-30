@@ -18,4 +18,5 @@ return [
     'iot_start' => env('IOT_BOT_SHELL_IOT_START'),
     'supervisorctl' => env('IOT_BOT_SHELL_SUPERVISORCTL'),
   ],
+  'local_img_path' => env('IOT_BOT_LOCAL_IMG_PATH'),
 ];
