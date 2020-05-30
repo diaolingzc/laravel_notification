@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\IotBotNotification as IotBotChannelNotification;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
