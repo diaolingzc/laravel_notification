@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Events\IotBot;
 
 class dailyJobs extends Command
 {
@@ -43,12 +44,25 @@ class dailyJobs extends Command
       })->toArray();
 
       foreach ($data as $key => $value) {
-        $localImgData = $this->webImgToLocalImg($value['url'], config('iotbot.local_img_path'), $value['is_r18'] ? 'https://www.zazhitaotu.com' : 'https://amlyu.com/');
 
-        $value['img'] = $localImgData['img'];
-        DB::table('coser_imgs')->where('id', $value['id'])->update($value);
+        try {
+          $localImgData = $this->webImgToLocalImg($value['url'], config('iotbot.local_img_path'), $value['is_r18'] ? 'https://www.zazhitaotu.com' : 'https://amlyu.com/');
 
-        Log::info('已更新图片：' . $value['id']);
+          $value['img'] = $localImgData['img'];
+          DB::table('coser_imgs')->where('id', $value['id'])->update($value);
+
+          Log::info('已更新图片：' . $value['id']);
+        } catch (\Exception $e) {
+          Log::debug($e->getMessage());
+          event(new IotBot([
+            'toUser' => config('iotbot.master'),
+            'sendToType' => 1,
+            'sendMsgType' => 'TextMsg',
+            'content' => '程序异常: id-' . $value['id'] . ', error: ' . $e->getMessage(),
+            'groupid' => 0,
+            'atUser' => 0,
+          ]));
+        }
       }
     }
 
