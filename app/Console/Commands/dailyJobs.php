@@ -37,42 +37,41 @@ class dailyJobs extends Command
      */
     public function handle()
     {
+        $data = DB::table('coser_imgs')->where('img', null)->limit(10)->get()->map(function ($value) {
+            return (array) $value;
+        })->toArray();
 
-      $data = DB::table('coser_imgs')->where('img', null)->limit(10)->get()->map(function ($value) {
-        return (array)$value;
-      })->toArray();
+        foreach ($data as $key => $value) {
+            $localImgData = $this->webImgToLocalImg($value['url'], config('iotbot.local_img_path'), $value['is_r18'] ? 'https://www.zazhitaotu.com' : 'https://amlyu.com/');
 
-      foreach ($data as $key => $value) {
-        $localImgData = $this->webImgToLocalImg($value['url'], config('iotbot.local_img_path'), $value['is_r18'] ? 'https://www.zazhitaotu.com' : 'https://amlyu.com/');
+            $value['img'] = $localImgData['img'];
+            DB::table('coser_imgs')->where('id', $value['id'])->update($value);
 
-        $value['img'] = $localImgData['img'];
-        DB::table('coser_imgs')->where('id', $value['id'])->update($value);
-
-        Log::info('已更新图片：' . $value['id']);
-      }
+            Log::info('已更新图片：'.$value['id']);
+        }
     }
 
     protected function webImgToLocalImg(string $url, string $path = '.', string $refer = 'https://amlyu.com/')
     {
-      $type = '.' . pathinfo( parse_url( $url, PHP_URL_PATH ), PATHINFO_EXTENSION );
+        $type = '.'.pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
 
-      $arrContextOptions = [
+        $arrContextOptions = [
         'http' => [
-          'header' => 'Referer: '.$refer
+          'header' => 'Referer: '.$refer,
         ],
         'ssl' => [
           'verify_peer' => false,
           'verify_peer_name' => false,
-        ]
+        ],
       ];
-      $base64 = chunk_split(base64_encode(file_get_contents($url, false, stream_context_create($arrContextOptions))));
-      
-      $base64Hash = hash('sha256', $base64);
-      $localImgPath = $path . '/' . hash('sha256', $base64) . $type;
-      if (file_put_contents($localImgPath, base64_decode($base64))) {
-        return ['img' => hash('sha256', $base64) . $type, 'localImgPath' => $localImgPath];
-      } else {
-        return false;
-      }
+        $base64 = chunk_split(base64_encode(file_get_contents($url, false, stream_context_create($arrContextOptions))));
+
+        $base64Hash = hash('sha256', $base64);
+        $localImgPath = $path.'/'.hash('sha256', $base64).$type;
+        if (file_put_contents($localImgPath, base64_decode($base64))) {
+            return ['img' => hash('sha256', $base64).$type, 'localImgPath' => $localImgPath];
+        } else {
+            return false;
+        }
     }
 }
