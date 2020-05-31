@@ -55,7 +55,18 @@ class dailyJobs extends Command
     protected function webImgToLocalImg(string $url, string $path = '.', string $refer = 'https://amlyu.com/')
     {
       $type = '.' . pathinfo( parse_url( $url, PHP_URL_PATH ), PATHINFO_EXTENSION );
-      $base64 = chunk_split(base64_encode(file_get_contents($url, false, stream_context_create(['http' => ['header' => 'Referer: '.$refer]]))));
+
+      $arrContextOptions = [
+        'http' => [
+          'header' => 'Referer: '.$refer
+        ],
+        'ssl' => [
+          'verify_peer' => false,
+          'verify_peer_name' => false,
+        ]
+      ];
+      $base64 = chunk_split(base64_encode(file_get_contents($url, false, stream_context_create($arrContextOptions))));
+      
       $base64Hash = hash('sha256', $base64);
       $localImgPath = $path . '/' . hash('sha256', $base64) . $type;
       if (file_put_contents($localImgPath, base64_decode($base64))) {
