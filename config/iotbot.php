@@ -19,4 +19,5 @@ return [
     'supervisorctl' => env('IOT_BOT_SHELL_SUPERVISORCTL'),
   ],
   'local_img_path' => env('IOT_BOT_LOCAL_IMG_PATH'),
+  'web_custom_img_path' => env('IOT_BOT_WEB_CUSTOM_IMG_PATH')
 ];

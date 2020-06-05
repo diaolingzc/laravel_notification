@@ -182,7 +182,7 @@ class IotBotGroupNotification implements ShouldQueue
         $data = $event->getData();
         $is_r18 = Redis::get('iotbot_is_r18') ?? 0;
 
-        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'cos')) {
+        if ( (in_array($data['FromGroupId'], config('iotbot.white_group')) || Redis::sismember('iotbot_cos_white_group', $data['FromGroupId'])) && strstr($data['Content'], 'cos')) {
             $callback = [
               'toUser' => $data['FromGroupId'],
               'sendToType' => 2,
@@ -193,13 +193,20 @@ class IotBotGroupNotification implements ShouldQueue
           ];
 
             $coser = DB::table('coser_imgs')->where('is_r18', $is_r18)->inRandomOrder()->first();
-            Log::info(json_encode($coser));
+            
             if ($coser) {
                 $callback['sendMsgType'] = 'PicMsg';
                 $callback['content'] = '';
-                $callback['picUrl'] = '';
-                $callback['picBase64Buf'] = $is_r18 ? $this->webImgToBase64($coser->url, 'https://www.zazhitaotu.com') : $this->webImgToBase64($coser->url);
-                $callback['fileMd5'] = '';
+                
+                if ($coser->img) {
+                  $callback['picUrl'] = config('iotbot.web_custom_img_path') . $coser->img;
+                  $callback['picBase64Buf'] = '';
+                  $callback['fileMd5'] = '';
+                } else {
+                  $callback['picUrl'] = '';
+                  $callback['picBase64Buf'] = $is_r18 ? $this->webImgToBase64($coser->url, 'https://www.zazhitaotu.com') : $this->webImgToBase64($coser->url);
+                  $callback['fileMd5'] = '';
+                }
             }
             Log::info('Notification：'.date('Y-m-d H:i:s'));
             Notification::send(request()->user(), new IotBotChannelNotification($callback));
@@ -233,7 +240,7 @@ class IotBotGroupNotification implements ShouldQueue
             $message = $this->getSweetSentence();
 
             if ('程序异常!' != $message) {
-                $callback['content'] = $message;
+                $callback['content'] = '\r\n' . $message;
             }
             Log::info(json_encode($message));
             Notification::send(request()->user(), new IotBotChannelNotification($callback));
@@ -279,7 +286,7 @@ class IotBotGroupNotification implements ShouldQueue
             Log::info(json_encode($output));
 
             if ('命令未知!' != $output) {
-                $callback['content'] = '重启成功!';
+                $callback['content'] = '\r\n重启成功!';
             }
             Log::info(json_encode($callback));
             sleep(10);
@@ -339,6 +346,58 @@ class IotBotGroupNotification implements ShouldQueue
             Notification::send(request()->user(), new IotBotChannelNotification($callback));
         }
         Log::info('handleToSetR18End：'.date('Y-m-d H:i:s'));
+
+        return;
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param IotBotGroup $event
+     */
+    public function handleSetConfig(IotBotGroup $event)
+    {
+        Log::info('handleSetConfig: '.date('Y-m-d H:i:s'));
+        $data = $event->getData();
+
+        if (in_array($data['FromUserId'], config('iotbot.master')) && strstr($data['Content'], 'config')) {
+            $callback = [
+                'toUser' => $data['FromGroupId'],
+                'sendToType' => 2,
+                'sendMsgType' => 'TextMsg',
+                'content' => '命令未知!',
+                'groupid' => 0,
+                'atUser' => $data['FromUserId'],
+            ];
+
+            $output = '';
+            switch ($data['Content']) {
+              case 'config:open cos command':
+                  Redis::sadd('iotbot_cos_white_group', $data['FromGroupId']);
+                  $output = '\r\n开启群'. $data['FromGroupId'] .' cos 权限！可执行命令\'cos\'';
+                  break;
+
+              case 'config:close cos command':
+                  Redis::srem('iotbot_cos_white_group', $data['FromGroupId']);
+                  $output = '\r\n已关闭群'. $data['FromGroupId'] .' cos 权限！';
+
+                  break;
+
+              default:
+                  $output = '命令未知!';
+
+                  break;
+            }
+
+            Log::info(Redis::get('iotbot_is_r18') ?? 0);
+
+            if ('命令未知!' != $output) {
+                $callback['content'] = $output;
+            }
+            Log::info(json_encode($callback));
+            Notification::send(request()->user(), new IotBotChannelNotification($callback));
+        }
+        Log::info('handleSetConfigEnd：'.date('Y-m-d H:i:s'));
 
         return;
     }
