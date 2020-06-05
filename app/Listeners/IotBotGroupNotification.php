@@ -27,7 +27,7 @@ class IotBotGroupNotification implements ShouldQueue
         $data = $event->getData();
         $is_r18 = Redis::get('iotbot_is_r18') ?? 0;
 
-        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'setu')) {
+        if ((in_array($data['FromGroupId'], config('iotbot.white_group')) || Redis::sismember('iotbot_setu_white_group', $data['FromGroupId'])) && strstr($data['Content'], 'setu')) {
             $callback = [
               'toUser' => $data['FromGroupId'],
               'sendToType' => 2,
@@ -261,7 +261,7 @@ class IotBotGroupNotification implements ShouldQueue
         Log::info('handleToReStart'.date('Y-m-d H:i:s'));
         $data = $event->getData();
 
-        if (in_array($data['FromUserId'], config('iotbot.master')) && strstr($data['Content'], 'shell:')) {
+        if (in_array($data['FromUserId'], config('iotbot.master')) && strstr($data['Content'], 'shell')) {
             $callback = [
                 'toUser' => $data['FromGroupId'],
                 'sendToType' => 2,
@@ -401,6 +401,16 @@ class IotBotGroupNotification implements ShouldQueue
                 case 'config:close sweet command':
                   Redis::srem('iotbot_sweet_white_group', $data['FromGroupId']);
                   $output = '\r\n已关闭群'. $data['FromGroupId'] .' sweet 权限！';
+                  break;
+
+                case 'config:open setu command':
+                  Redis::sadd('iotbot_setu_white_group', $data['FromGroupId']);
+                  $output = '\r\n开启群'. $data['FromGroupId'] .' setu 权限！可执行命令\'setu\'';
+                  break;
+      
+                case 'config:close setu command':
+                  Redis::srem('iotbot_setu_white_group', $data['FromGroupId']);
+                  $output = '\r\n已关闭群'. $data['FromGroupId'] .' setu 权限！';
                   break;
 
               default:
