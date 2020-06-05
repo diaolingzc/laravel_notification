@@ -94,11 +94,6 @@ class IotBotEventSubscriber implements ShouldQueue
 
         $events->listen(
             'App\Events\IotBotGroup',
-            'App\Listeners\IotBotGroupNotification@handleToSetR18'
-        );
-
-        $events->listen(
-            'App\Events\IotBotGroup',
             'App\Listeners\IotBotGroupNotification@handleSetConfig'
         );
     }

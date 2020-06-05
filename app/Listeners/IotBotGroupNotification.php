@@ -25,7 +25,7 @@ class IotBotGroupNotification implements ShouldQueue
     {
         Log::info('handleToSeTu：'.date('Y-m-d H:i:s'));
         $data = $event->getData();
-        $is_r18 = Redis::get('iotbot_is_r18') ?? 0;
+        $is_r18 = Redis::sismember('iotbot_r18_white_group', $data['FromGroupId']);
 
         if ((in_array($data['FromGroupId'], config('iotbot.white_group')) || Redis::sismember('iotbot_setu_white_group', $data['FromGroupId'])) && strstr($data['Content'], 'setu')) {
             $callback = [
@@ -180,7 +180,7 @@ class IotBotGroupNotification implements ShouldQueue
     {
         Log::info('handleToCoser: '.date('Y-m-d H:i:s'));
         $data = $event->getData();
-        $is_r18 = Redis::get('iotbot_is_r18') ?? 0;
+        $is_r18 = Redis::sismember('iotbot_r18_white_group', $data['FromGroupId']);
 
         if ( (in_array($data['FromGroupId'], config('iotbot.white_group')) || Redis::sismember('iotbot_cos_white_group', $data['FromGroupId'])) && strstr($data['Content'], 'cos')) {
             $callback = [
@@ -303,59 +303,6 @@ class IotBotGroupNotification implements ShouldQueue
      *
      * @param IotBotGroup $event
      */
-    public function handleToSetR18(IotBotGroup $event)
-    {
-        Log::info('handleToSetR18: '.date('Y-m-d H:i:s'));
-        $data = $event->getData();
-
-        if (in_array($data['FromUserId'], config('iotbot.master')) && strstr($data['Content'], 'r18')) {
-            $callback = [
-                'toUser' => $data['FromGroupId'],
-                'sendToType' => 2,
-                'sendMsgType' => 'TextMsg',
-                'content' => '命令未知!',
-                'groupid' => 0,
-                'atUser' => $data['FromUserId'],
-            ];
-
-            $output = '';
-            switch ($data['Content']) {
-              case '开启r18':
-                  Redis::set('iotbot_is_r18', 1);
-                  $output = '已开启 r18 模式！';
-
-                  break;
-
-              case '关闭r18':
-                  Redis::set('iotbot_is_r18', 0);
-                  $output = '已关闭 r18 模式！';
-
-                  break;
-
-              default:
-                  $output = '命令未知!';
-
-                  break;
-            }
-
-            Log::info(Redis::get('iotbot_is_r18') ?? 0);
-
-            if ('命令未知!' != $output) {
-                $callback['content'] = $output;
-            }
-            Log::info(json_encode($callback));
-            Notification::send(request()->user(), new IotBotChannelNotification($callback));
-        }
-        Log::info('handleToSetR18End：'.date('Y-m-d H:i:s'));
-
-        return;
-    }
-
-    /**
-     * Handle the event.
-     *
-     * @param IotBotGroup $event
-     */
     public function handleSetConfig(IotBotGroup $event)
     {
         Log::info('handleSetConfig: '.date('Y-m-d H:i:s'));
@@ -413,13 +360,21 @@ class IotBotGroupNotification implements ShouldQueue
                   $output = '\r\n已关闭群'. $data['FromGroupId'] .' setu 权限！';
                   break;
 
+                case 'config:open r18 command':
+                  Redis::sadd('iotbot_r18_white_group', $data['FromGroupId']);
+                  $output = '\r\n开启群'. $data['FromGroupId'] .' r18 权限！命令\'cos\' \'setu\' 进入 r18 功能';
+                  break;
+        
+                case 'config:close r18 command':
+                  Redis::srem('iotbot_r18_white_group', $data['FromGroupId']);
+                  $output = '\r\n已关闭群'. $data['FromGroupId'] .' r18 权限！';
+                  break;
+
               default:
                   $output = '命令未知!';
 
                   break;
             }
-
-            Log::info(Redis::get('iotbot_is_r18') ?? 0);
 
             if ('命令未知!' != $output) {
                 $callback['content'] = $output;
