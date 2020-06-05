@@ -228,7 +228,7 @@ class IotBotGroupNotification implements ShouldQueue
         Log::info('handleSweetSentence：'.date('Y-m-d H:i:s'));
         $data = $event->getData();
 
-        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], '撩我')) {
+        if ((in_array($data['FromGroupId'], config('iotbot.white_group')) || Redis::sismember('iotbot_sweet_white_group', $data['FromGroupId'])) && strstr($data['Content'], '撩我')) {
             $callback = [
               'toUser' => $data['FromGroupId'],
               'sendToType' => 2,
@@ -261,7 +261,7 @@ class IotBotGroupNotification implements ShouldQueue
         Log::info('handleToReStart'.date('Y-m-d H:i:s'));
         $data = $event->getData();
 
-        if (in_array($data['FromUserId'], config('iotbot.master')) && strstr($data['Content'], '重启')) {
+        if (in_array($data['FromUserId'], config('iotbot.master')) && strstr($data['Content'], 'shell:')) {
             $callback = [
                 'toUser' => $data['FromGroupId'],
                 'sendToType' => 2,
@@ -273,7 +273,7 @@ class IotBotGroupNotification implements ShouldQueue
 
             $output = '';
             switch ($data['Content']) {
-              case '重启iot':
+              case 'shell:restart iot':
                   exec(config('iotbot.shell.iot_stop'), $output);
                   exec(config('iotbot.shell.iot_start'));
 
@@ -381,7 +381,6 @@ class IotBotGroupNotification implements ShouldQueue
               case 'config:close cos command':
                   Redis::srem('iotbot_cos_white_group', $data['FromGroupId']);
                   $output = '\r\n已关闭群'. $data['FromGroupId'] .' cos 权限！';
-
                   break;
               
               case 'config:open meizi command':
@@ -392,7 +391,16 @@ class IotBotGroupNotification implements ShouldQueue
               case 'config:close meizi command':
                   Redis::srem('iotbot_meizi_white_group', $data['FromGroupId']);
                   $output = '\r\n已关闭群'. $data['FromGroupId'] .' meizi 权限！';
-  
+                  break;
+
+                case 'config:open sweet command':
+                  Redis::sadd('iotbot_sweet_white_group', $data['FromGroupId']);
+                  $output = '\r\n开启群'. $data['FromGroupId'] .' sweet 权限！可执行命令\'撩我\'';
+                  break;
+    
+                case 'config:close sweet command':
+                  Redis::srem('iotbot_sweet_white_group', $data['FromGroupId']);
+                  $output = '\r\n已关闭群'. $data['FromGroupId'] .' sweet 权限！';
                   break;
 
               default:
