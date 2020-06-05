@@ -52,7 +52,7 @@ class dailyJobs extends Command
                 Log::info('已更新图片：'.$value['id']);
             } catch (\Exception $e) {
                 Log::debug($e->getMessage());
-                $data = 
+                $data =
                 event(new IotBot([
                   'toUser' => config('iotbot.master')[0],
                   'sendToType' => 1,
