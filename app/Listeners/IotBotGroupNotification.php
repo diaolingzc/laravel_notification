@@ -66,7 +66,7 @@ class IotBotGroupNotification implements ShouldQueue
         Log::info('handleToSeTu：'.date('Y-m-d H:i:s'));
         $data = $event->getData();
 
-        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'meizi')) {
+        if ((in_array($data['FromGroupId'], config('iotbot.white_group')) || Redis::sismember('iotbot_meizi_white_group', $data['FromGroupId'])) && strstr($data['Content'], 'meizi')) {
             $callback = [
               'toUser' => $data['FromGroupId'],
               'sendToType' => 2,
@@ -105,7 +105,7 @@ class IotBotGroupNotification implements ShouldQueue
         Log::info('handleToJio'.date('Y-m-d H:i:s'));
         $data = $event->getData();
 
-        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'jio')) {
+        if ((in_array($data['FromGroupId'], config('iotbot.white_group')) || Redis::sismember('iotbot_meizi_white_group', $data['FromGroupId'])) && strstr($data['Content'], 'jio')) {
             $callback = [
               'toUser' => $data['FromGroupId'],
               'sendToType' => 2,
@@ -143,7 +143,7 @@ class IotBotGroupNotification implements ShouldQueue
         Log::info('handleToNaiZi'.date('Y-m-d H:i:s'));
         $data = $event->getData();
 
-        if (in_array($data['FromGroupId'], config('iotbot.white_group')) && strstr($data['Content'], 'naizi')) {
+        if ((in_array($data['FromGroupId'], config('iotbot.white_group')) || Redis::sismember('iotbot_meizi_white_group', $data['FromGroupId'])) && strstr($data['Content'], 'naizi')) {
             $callback = [
               'toUser' => $data['FromGroupId'],
               'sendToType' => 2,
@@ -198,6 +198,7 @@ class IotBotGroupNotification implements ShouldQueue
                 $callback['sendMsgType'] = 'PicMsg';
                 $callback['content'] = '';
                 
+                // 若 img 存在, 则使用自定义域名地址图片，否则源站下载后转base64
                 if ($coser->img) {
                   $callback['picUrl'] = config('iotbot.web_custom_img_path') . $coser->img;
                   $callback['picBase64Buf'] = '';
@@ -381,6 +382,17 @@ class IotBotGroupNotification implements ShouldQueue
                   Redis::srem('iotbot_cos_white_group', $data['FromGroupId']);
                   $output = '\r\n已关闭群'. $data['FromGroupId'] .' cos 权限！';
 
+                  break;
+              
+              case 'config:open meizi command':
+                  Redis::sadd('iotbot_meizi_white_group', $data['FromGroupId']);
+                  $output = '\r\n开启群'. $data['FromGroupId'] .' meizi 权限！可执行命令\'meizi\' \'jio\' \'naizi\'';
+                  break;
+  
+              case 'config:close meizi command':
+                  Redis::srem('iotbot_meizi_white_group', $data['FromGroupId']);
+                  $output = '\r\n已关闭群'. $data['FromGroupId'] .' meizi 权限！';
+  
                   break;
 
               default:
