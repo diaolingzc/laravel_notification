@@ -38,7 +38,7 @@ class dailyJobs extends Command
      */
     public function handle()
     {
-        $data = DB::table('coser_imgs')->where('img', null)->where('url', 'like', 'https://www.zazhitaotu.com%')->limit(20)->get()->map(function ($value) {
+        $data = DB::table('coser_imgs')->where('img', null)->limit(20)->get()->map(function ($value) {
             return (array) $value;
         })->toArray();
 
