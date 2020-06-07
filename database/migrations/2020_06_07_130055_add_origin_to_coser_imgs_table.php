@@ -8,25 +8,21 @@ class AddOriginToCoserImgsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
         Schema::table('coser_imgs', function (Blueprint $table) {
-          $table->string('origin')->after('url')->nullable($value = true);
+            $table->string('origin')->after('url')->nullable($value = true);
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
         Schema::table('coser_imgs', function (Blueprint $table) {
-          $table->dropColumn('origin');
+            $table->dropColumn('origin');
         });
     }
 }
