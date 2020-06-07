@@ -205,7 +205,7 @@ class IotBotGroupNotification implements ShouldQueue
                   $callback['fileMd5'] = '';
                 } else {
                   $callback['picUrl'] = '';
-                  $callback['picBase64Buf'] = $is_r18 ? $this->webImgToBase64($coser->url, 'https://www.zazhitaotu.com') : $this->webImgToBase64($coser->url);
+                  $callback['picBase64Buf'] = $this->webImgToBase64($coser->url, $coser->origin);
                   $callback['fileMd5'] = '';
                 }
             }
@@ -428,7 +428,7 @@ class IotBotGroupNotification implements ShouldQueue
         return $message;
     }
 
-    protected function webImgToBase64(string $img = '', string $refer = 'https://amlyu.com/')
+    protected function webImgToBase64(string $img = '', string $refer = '')
     {
         $context = stream_context_create(['http' => ['header' => 'Referer: '.$refer]]);
 
