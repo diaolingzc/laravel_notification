@@ -8,7 +8,6 @@ use App\Http\Resources\CoserImgResource;
 use Illuminate\Http\Request;
 use App\Http\Resources\CoserTopicResource;
 use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
 
 class CoserTopicController extends Controller
 {
@@ -29,6 +28,6 @@ class CoserTopicController extends Controller
 
     public function show(Request $request, CoserImg $img)
     {
-      return CoserImgResource::collection($img->where('coser_topic_id', $request->coser_topic)->get());
+        return CoserImgResource::collection($img->where('coser_topic_id', $request->coser_topic)->get());
     }
 }
