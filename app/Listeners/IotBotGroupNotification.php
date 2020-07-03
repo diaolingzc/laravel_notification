@@ -182,7 +182,7 @@ class IotBotGroupNotification implements ShouldQueue
         $data = $event->getData();
         $is_r18 = Redis::sismember('iotbot_r18_white_group', $data['FromGroupId']);
 
-        if ( (in_array($data['FromGroupId'], config('iotbot.white_group')) || Redis::sismember('iotbot_cos_white_group', $data['FromGroupId'])) && strstr($data['Content'], 'cos')) {
+        if ((in_array($data['FromGroupId'], config('iotbot.white_group')) || Redis::sismember('iotbot_cos_white_group', $data['FromGroupId'])) && strstr($data['Content'], 'cos')) {
             $callback = [
               'toUser' => $data['FromGroupId'],
               'sendToType' => 2,
@@ -193,20 +193,20 @@ class IotBotGroupNotification implements ShouldQueue
           ];
 
             $coser = DB::table('coser_imgs')->where('is_r18', $is_r18)->inRandomOrder()->first();
-            
+
             if ($coser) {
                 $callback['sendMsgType'] = 'PicMsg';
                 $callback['content'] = '';
-                
+
                 // 若 img 存在, 则使用自定义域名地址图片，否则源站下载后转base64
                 if ($coser->img) {
-                  $callback['picUrl'] = config('iotbot.web_custom_img_path') . $coser->img;
-                  $callback['picBase64Buf'] = '';
-                  $callback['fileMd5'] = '';
+                    $callback['picUrl'] = config('iotbot.web_custom_img_path').$coser->img;
+                    $callback['picBase64Buf'] = '';
+                    $callback['fileMd5'] = '';
                 } else {
-                  $callback['picUrl'] = '';
-                  $callback['picBase64Buf'] = $this->webImgToBase64($coser->url, $coser->origin);
-                  $callback['fileMd5'] = '';
+                    $callback['picUrl'] = '';
+                    $callback['picBase64Buf'] = $this->webImgToBase64($coser->url, $coser->origin);
+                    $callback['fileMd5'] = '';
                 }
             }
             Log::info(json_encode($callback));
@@ -242,7 +242,7 @@ class IotBotGroupNotification implements ShouldQueue
             $message = $this->getSweetSentence();
 
             if ('程序异常!' != $message) {
-                $callback['content'] = "\n" . $message;
+                $callback['content'] = "\n".$message;
             }
             Log::info(json_encode($message));
             Notification::send(request()->user(), new IotBotChannelNotification($callback));
@@ -323,52 +323,62 @@ class IotBotGroupNotification implements ShouldQueue
             switch ($data['Content']) {
               case 'config:open cos command':
                   Redis::sadd('iotbot_cos_white_group', $data['FromGroupId']);
-                  $output = "\n开启群 ". $data['FromGroupId'] ." cos 权限！可执行命令 'cos'";
+                  $output = "\n开启群 ".$data['FromGroupId']." cos 权限！可执行命令 'cos'";
+
                   break;
 
               case 'config:close cos command':
                   Redis::srem('iotbot_cos_white_group', $data['FromGroupId']);
-                  $output = "\n已关闭群 ". $data['FromGroupId'] ." cos 权限！";
+                  $output = "\n已关闭群 ".$data['FromGroupId'].' cos 权限！';
+
                   break;
-              
+
               case 'config:open meizi command':
                   Redis::sadd('iotbot_meizi_white_group', $data['FromGroupId']);
-                  $output = "\n开启群 ". $data['FromGroupId'] ." meizi 权限！可执行命令 'meizi' 'jio' 'naizi'";
+                  $output = "\n开启群 ".$data['FromGroupId']." meizi 权限！可执行命令 'meizi' 'jio' 'naizi'";
+
                   break;
-  
+
               case 'config:close meizi command':
                   Redis::srem('iotbot_meizi_white_group', $data['FromGroupId']);
-                  $output = "\n已关闭群 ". $data['FromGroupId'] ." meizi 权限！";
+                  $output = "\n已关闭群 ".$data['FromGroupId'].' meizi 权限！';
+
                   break;
 
                 case 'config:open sweet command':
                   Redis::sadd('iotbot_sweet_white_group', $data['FromGroupId']);
-                  $output = "\n开启群 ". $data['FromGroupId'] ." sweet 权限！可执行命令 '撩我'";
+                  $output = "\n开启群 ".$data['FromGroupId']." sweet 权限！可执行命令 '撩我'";
+
                   break;
-    
+
                 case 'config:close sweet command':
                   Redis::srem('iotbot_sweet_white_group', $data['FromGroupId']);
-                  $output = "\n已关闭群 ". $data['FromGroupId'] ." sweet 权限！";
+                  $output = "\n已关闭群 ".$data['FromGroupId'].' sweet 权限！';
+
                   break;
 
                 case 'config:open setu command':
                   Redis::sadd('iotbot_setu_white_group', $data['FromGroupId']);
-                  $output = "\n开启群 ". $data['FromGroupId'] ." setu 权限！可执行命令 'setu'";
+                  $output = "\n开启群 ".$data['FromGroupId']." setu 权限！可执行命令 'setu'";
+
                   break;
-      
+
                 case 'config:close setu command':
                   Redis::srem('iotbot_setu_white_group', $data['FromGroupId']);
-                  $output = "\n已关闭群 ". $data['FromGroupId'] ." setu 权限！";
+                  $output = "\n已关闭群 ".$data['FromGroupId'].' setu 权限！';
+
                   break;
 
                 case 'config:open r18 command':
                   Redis::sadd('iotbot_r18_white_group', $data['FromGroupId']);
-                  $output = "\n开启群 ". $data['FromGroupId'] ." r18 权限！命令 'cos' 'setu' 开启 r18 功能";
+                  $output = "\n开启群 ".$data['FromGroupId']." r18 权限！命令 'cos' 'setu' 开启 r18 功能";
+
                   break;
-        
+
                 case 'config:close r18 command':
                   Redis::srem('iotbot_r18_white_group', $data['FromGroupId']);
-                  $output = "\n已关闭群 ". $data['FromGroupId'] ." r18 权限！";
+                  $output = "\n已关闭群 ".$data['FromGroupId'].' r18 权限！';
+
                   break;
 
               default:
