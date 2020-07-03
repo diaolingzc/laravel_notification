@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use App\Events\IotBotGroup;
 
 class IotCoser extends Command
@@ -25,8 +23,6 @@ class IotCoser extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -44,7 +40,7 @@ class IotCoser extends Command
         'FromGroupId' => config('iotbot.news_group'),
         'FromUserId' => config('iotbot.robot_qq'),
         'MsgType' => 'TextMsg',
-        'Content' => 'cos'
+        'Content' => 'cos',
     ];
 
         event(new IotBotGroup($data));

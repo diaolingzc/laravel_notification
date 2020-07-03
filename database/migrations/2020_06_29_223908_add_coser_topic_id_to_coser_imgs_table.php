@@ -8,25 +8,21 @@ class AddCoserTopicIdToCoserImgsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
         Schema::table('coser_imgs', function (Blueprint $table) {
-          $table->integer('coser_topic_id')->after('id')->unsigned()->index();
+            $table->integer('coser_topic_id')->after('id')->unsigned()->index();
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
         Schema::table('coser_imgs', function (Blueprint $table) {
-          $table->dropColumn('coser_topic_id');
+            $table->dropColumn('coser_topic_id');
         });
     }
 }
