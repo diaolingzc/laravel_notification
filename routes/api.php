@@ -26,4 +26,8 @@ Route::prefix('v1')->namespace('Api')->name('api.v1.')->group(function () {
 
     // iot callback
     Route::post('iot/callback/{type}', 'IotBotController@callback')->name('iot.callback');
+
+    Route::get('coser_categories', 'CoserCategoryController@index')->name('coser_categories.index');
+
+    Route::resource('coser_topics', 'CoserTopicController');
 });

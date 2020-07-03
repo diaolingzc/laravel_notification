@@ -95,7 +95,7 @@ class IotBotFriendNotification implements ShouldQueue
             $response = $client->request('GET', 'http://api.yuban10703.xyz:2333/setu', ['query' => $query]);
             if (200 === $response->getStatusCode()) {
                 $response = json_decode($response->getBody()->getContents(), true);
-                $message = 'https://cdn.jsdelivr.net/gh/laosepi/setu/pics/'.$response['filename'][0];
+                $message = 'https://cdn.jsdelivr.net/gh/laosepi/setu/pics/'.$response['filename'];
             }
         } catch (\Exception $e) {
             Log::info($e->getMessage());
