@@ -30,3 +30,4 @@ class CreateCoserTopicsTable extends Migration
         Schema::dropIfExists('coser_topics');
     }
 }
+  

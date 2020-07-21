@@ -28,25 +28,33 @@ class IotBotChannel
             $this->client->setGuzzleOptions(['auth' => [config('iotbot.auth.user'), config('iotbot.auth.pwd')]]);
         }
 
-        switch ($message['sendMsgType']) {
-            case 'TextMsg':
-                $response = $this->client->sendTextMsg($message['toUser'], $message['sendToType'], $message['content'], $message['groupid'], $message['atUser']);
+        try {
+            switch ($message['sendMsgType']) {
+                case 'TextMsg':
+                    $response = $this->client->sendTextMsg($message['toUser'], $message['sendToType'], $message['content'], $message['groupid'], $message['atUser']);
 
-                break;
-            case 'PicMsg':
-                $response = $this->client->sendPicMsg($message['toUser'], $message['sendToType'], $message['content'], $message['groupid'], $message['atUser'], $message['picUrl'], $message['picBase64Buf'], $message['fileMd5']);
+                    break;
+                case 'PicMsg':
+                    $response = $this->client->sendPicMsg($message['toUser'], $message['sendToType'], $message['content'], $message['groupid'], $message['atUser'], $message['picUrl'], $message['picBase64Buf'], $message['fileMd5']);
 
-                break;
-            case 'VoiceMsg':
-                $response = $this->client->sendVoiceMsg($message['toUser'], $message['sendToType'], $message['content'], $message['groupid'], $message['atUser'], $message['voiceUrl'], $message['voiceBase64Buf']);
+                    break;
+                case 'VoiceMsg':
+                    $response = $this->client->sendVoiceMsg($message['toUser'], $message['sendToType'], $message['content'], $message['groupid'], $message['atUser'], $message['voiceUrl'], $message['voiceBase64Buf']);
 
-                break;
-            default:
-                Log::info('SendMsgType is error!');
+                    break;
+                default:
+                    Log::info('SendMsgType is error!');
 
-                break;
+                    break;
+            }
+
+            if($response->getStatusCode() === 502) {
+              Log::info(502);
+            }
+        } catch (\Exception $e) {
+          exec(config('iotbot.shell.iot_stop'));
+          exec(config('iotbot.shell.iot_start'));
         }
-
         Log::info(json_encode($response));
     }
 }
