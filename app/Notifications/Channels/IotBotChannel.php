@@ -48,12 +48,12 @@ class IotBotChannel
                     break;
             }
 
-            if($response->getStatusCode() === 502) {
-              Log::info(502);
+            if (502 === $response->getStatusCode()) {
+                Log::info(502);
             }
         } catch (\Exception $e) {
-          exec(config('iotbot.shell.iot_stop'));
-          exec(config('iotbot.shell.iot_start'));
+            exec(config('iotbot.shell.iot_stop'));
+            exec(config('iotbot.shell.iot_start'));
         }
         Log::info(json_encode($response));
     }
