@@ -16,8 +16,6 @@ class IotBotFriendNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotFriend $event
      */
     public function handleToSeTu(IotBotFriend $event)
     {
@@ -56,8 +54,6 @@ class IotBotFriendNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotFriend $event
      */
     public function handleSweetSentence(IotBotFriend $event)
     {
