@@ -24,8 +24,6 @@ class IotBotRevokeMsgNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotGroup $event
      */
     public function handleRevokeMsg(IotBotGroup $event)
     {

@@ -18,8 +18,6 @@ class IotBotGroupNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotGroup $event
      */
     public function handleToSeTu(IotBotGroup $event)
     {
@@ -58,8 +56,6 @@ class IotBotGroupNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotGroup $event
      */
     public function handleToMeiZi(IotBotGroup $event)
     {
@@ -97,8 +93,6 @@ class IotBotGroupNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotGroup $event
      */
     public function handleToJio(IotBotGroup $event)
     {
@@ -135,8 +129,6 @@ class IotBotGroupNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotGroup $event
      */
     public function handleToNaiZi(IotBotGroup $event)
     {
@@ -173,8 +165,6 @@ class IotBotGroupNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotGroup $event
      */
     public function handleToCoser(IotBotGroup $event)
     {
@@ -221,8 +211,6 @@ class IotBotGroupNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotGroup $event
      */
     public function handleSweetSentence(IotBotGroup $event)
     {
@@ -254,8 +242,6 @@ class IotBotGroupNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotGroup $event
      */
     public function handleToReStart(IotBotGroup $event)
     {
@@ -301,8 +287,6 @@ class IotBotGroupNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotGroup $event
      */
     public function handleSetConfig(IotBotGroup $event)
     {
