@@ -65,6 +65,7 @@ class IotBili extends Command
               Cache::put(config('iotbot.bili_up_id'), 1);
               Cache::put(config('iotbot.bili_up_id').'live_time', strtotime($response['data']['live_time']));
               $message = '您喜欢的 UP主 已经开播啦！'.PHP_EOL.'快访问 live.bilibili.com/'.config('iotbot.bili_up_id').' 观看吧！';
+              // no break
             default:
               break;
           }
