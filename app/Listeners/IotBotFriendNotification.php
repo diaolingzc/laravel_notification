@@ -16,8 +16,6 @@ class IotBotFriendNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBotFriend $event
      */
     public function handleToSeTu(IotBotFriend $event)
     {
@@ -51,13 +49,11 @@ class IotBotFriendNotification implements ShouldQueue
     {
         $data = $event->getData();
         Log::info(json_encode($data));
-        //Notification::send(request()->user(), new IotBotChannelNotification($data));
+        // Notification::send(request()->user(), new IotBotChannelNotification($data));
     }
 
     /**
      * Handle the event.
-     *
-     * @param IotBotFriend $event
      */
     public function handleSweetSentence(IotBotFriend $event)
     {

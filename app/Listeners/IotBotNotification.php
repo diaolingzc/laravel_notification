@@ -14,8 +14,6 @@ class IotBotNotification implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param IotBot $event
      */
     public function handle(IotBot $event)
     {
