@@ -24,8 +24,7 @@ class IotBotRevokeMsgChannel
     /**
      * 发送指定的通知.
      *
-     * @param mixed                                  $notifiable
-     * @param \Illuminate\Notifications\Notification $notification
+     * @param mixed $notifiable
      */
     public function send($notifiable, Notification $notification)
     {
